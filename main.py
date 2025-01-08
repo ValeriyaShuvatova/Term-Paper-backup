@@ -1,8 +1,11 @@
+from logging import raiseExceptions
+
 import requests
 import configparser # библиотека для работы с файлами конфигурации (мы можем сохранить конфигурацию, относящуюся к нашему приложению, в файле конфигурации в любом месте системы и получить к ней доступ внутри нашего приложения)
 import sys
 import json
 from tqdm import tqdm
+
 
 config = configparser.ConfigParser()  # Это нужно запомнить. Создаем объект парсера (это скрипты, которые ищут источники по заданным параметрам, извлекают из них нужную информацию, преобразуют её и сохраняют в нужном формате
 config.read('settings.ini')  # читаем файл, settings.ini
@@ -30,10 +33,14 @@ class VK:  # создаем класс для работы с ВК
             'count': count
         }
         params.update(self.params)
+
         response = requests.get(url, params=params)
         if response.status_code != 200:
-            print(f"Ошибка при получении фотографий: {response.text}")
-            sys.exit(1)
+            try:
+                raise IndexError
+            except IndexError:
+                print(f"Ошибка при получении фотографий: {response.text}")
+
         return response.json()
 
 
